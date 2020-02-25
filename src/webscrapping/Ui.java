@@ -45,6 +45,8 @@ public class Ui extends javax.swing.JFrame {
         txtDescription = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtPagina = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtTitle = new javax.swing.JTextArea();
         qtdLinks = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -75,6 +77,12 @@ public class Ui extends javax.swing.JFrame {
         jScrollPane3.setViewportView(txtPagina);
 
         tabPagina.addTab("paginas", jScrollPane3);
+
+        txtTitle.setColumns(20);
+        txtTitle.setRows(5);
+        jScrollPane4.setViewportView(txtTitle);
+
+        tabPagina.addTab("Title", jScrollPane4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,9 +184,10 @@ public class Ui extends javax.swing.JFrame {
                         qtdLinks.setText("Quantidade de links: "+linkAtual+"/"+totalLinks);
                         String linkInteiro = link.attr("href");
                         System.out.println(linkInteiro);
-                        //setTxtPagina(linkInteiro);
+                        setTxtPagina(linkInteiro);
                         pegaTitle(linkInteiro);
                         geraDados(linkInteiro);
+                        veificaTitle(linkInteiro);
                 }
                     
             }
@@ -205,7 +214,7 @@ public class Ui extends javax.swing.JFrame {
             document = Jsoup.connect(url).get();
             String description = document.select("meta[name=description]").get(0).attr("content");
             //if((description.length() > 160)|| (description.length() < 140) ){
-                setTxtDescription("quantidade de caracteres "+description.length());
+                setTxtDescription(description);
             //}
             
         } catch (IOException ex) {
@@ -214,6 +223,19 @@ public class Ui extends javax.swing.JFrame {
         
          
       
+    }
+    public void veificaTitle(String url){
+        try {
+            doc = Jsoup.connect(url).get();
+            Elements title = doc.select("img");
+            for (Element titles : title) {
+                String TitleCompleto = titles.attr("title");
+                setTxtTitle(TitleCompleto+" - pagina"+ titles.attr("src"));
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Ui.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 public void setResposta(String isso) {
         resposta.insert(isso, resposta.getCaretPosition());
@@ -227,16 +249,24 @@ public void setTxtPagina(String desc){
     txtPagina.insert(desc, txtPagina.getCaretPosition());
     txtPagina.append("\n");
 }
+public void setTxtTitle(String boa){
+    txtTitle.insert(boa,txtTitle.getCaretPosition());
+    txtTitle.append("\n");
+    
+}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel qtdLinks;
     private javax.swing.JTextArea resposta;
     private javax.swing.JTextField site;
     private javax.swing.JTabbedPane tabPagina;
     private javax.swing.JTextArea txtDescription;
     private javax.swing.JTextArea txtPagina;
+    private javax.swing.JTextArea txtTitle;
     // End of variables declaration//GEN-END:variables
 }
